@@ -1,5 +1,7 @@
 package com.ellen.finsphere.service;
 
+import com.ellen.finsphere.dto.UserRequestDTO;
+import com.ellen.finsphere.dto.UserResponseDTO;
 import com.ellen.finsphere.model.User;
 import com.ellen.finsphere.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -13,46 +15,69 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User create(User user) {
+    public UserResponseDTO create(UserRequestDTO dto) {
 
-        if (user.getName() == null || user.getName().isBlank()) {
+        if (dto.getName() == null || dto.getName().isBlank()) {
             throw new IllegalArgumentException("O nome é obrigatório.");
         }
 
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
+        if (dto.getEmail() == null || dto.getEmail().isBlank()) {
             throw new IllegalArgumentException("O e-mail é obrigatório.");
         }
 
-        if (user.getPassword() == null || user.getPassword().isBlank()) {
+        if (dto.getPassword() == null || dto.getPassword().isBlank()) {
             throw new IllegalArgumentException("A senha é obrigatória.");
         }
 
-        if (userRepository.existsByEmail(user.getEmail())) {
+        if (userRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException(
                     "Já existe um usuário cadastrado com este e-mail."
             );
         }
 
-        return userRepository.save(user);
+        User user = new User(
+                null,
+                dto.getName(),
+                dto.getEmail(),
+                dto.getPassword()
+        );
+
+        User savedUser = userRepository.save(user);
+
+        return toResponse(savedUser);
     }
 
-    public User findById(Long id) {
+    public UserResponseDTO findById(Long id) {
 
-        return userRepository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
                                 "Usuário não encontrado."
                         )
                 );
+
+        return toResponse(user);
     }
 
-    public User findByEmail(String email) {
+    public UserResponseDTO findByEmail(String email) {
 
-        return userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
                                 "Usuário não encontrado."
                         )
                 );
+
+        return toResponse(user);
+    }
+
+    private UserResponseDTO toResponse(User user) {
+
+        return new UserResponseDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getCreatedAt()
+        );
     }
 }
