@@ -1,6 +1,7 @@
 package com.ellen.finsphere.controller;
 
-import com.ellen.finsphere.model.User;
+import com.ellen.finsphere.dto.UserRequestDTO;
+import com.ellen.finsphere.dto.UserResponseDTO;
 import com.ellen.finsphere.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,18 +18,16 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> create(
-            @RequestBody User user) {
-
-        User createdUser = userService.create(user);
+    public ResponseEntity<UserResponseDTO> create(
+            @RequestBody UserRequestDTO user) {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(createdUser);
+                .body(userService.create(user));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(
+    public ResponseEntity<UserResponseDTO> findById(
             @PathVariable Long id) {
 
         return ResponseEntity.ok(
@@ -37,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<User> findByEmail(
+    public ResponseEntity<UserResponseDTO> findByEmail(
             @PathVariable String email) {
 
         return ResponseEntity.ok(
