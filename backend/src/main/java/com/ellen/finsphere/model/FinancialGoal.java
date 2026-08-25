@@ -1,15 +1,31 @@
 package com.ellen.finsphere.model;
 
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "financial_goals")
 public class FinancialGoal {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal targetAmount;
+
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal currentAmount;
+
     private LocalDate deadline;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     public FinancialGoal() {
     }
@@ -19,13 +35,15 @@ public class FinancialGoal {
             String name,
             BigDecimal targetAmount,
             BigDecimal currentAmount,
-            LocalDate deadline) {
+            LocalDate deadline,
+            User user) {
 
         this.id = id;
         this.name = name;
         this.targetAmount = targetAmount;
         this.currentAmount = currentAmount;
         this.deadline = deadline;
+        this.user = user;
     }
 
     public Long getId() {
@@ -66,5 +84,13 @@ public class FinancialGoal {
 
     public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

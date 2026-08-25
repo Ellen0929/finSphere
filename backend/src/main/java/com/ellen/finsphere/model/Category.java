@@ -1,16 +1,29 @@
 package com.ellen.finsphere.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "categories")
 public class Category {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     public Category() {
     }
 
-    public Category(Long id, String name) {
+    public Category(Long id, String name, User user) {
         this.id = id;
         this.name = name;
+        this.user = user;
     }
 
     public Long getId() {
@@ -27,5 +40,13 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
