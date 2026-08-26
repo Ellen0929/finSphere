@@ -1,6 +1,7 @@
 .sidebar {
   width: 250px;
-  height: 100vh;
+  min-height: 100%;
+  align-self: stretch;
   background: linear-gradient(180deg, #17142b 0%, #211a3d 100%);
   color: #fff;
   display: flex;

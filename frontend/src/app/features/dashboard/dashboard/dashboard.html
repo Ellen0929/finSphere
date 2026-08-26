@@ -13,3 +13,350 @@
   </div>
 
 </section>
+
+<div class="summary-grid">
+
+  <article class="summary-card balance">
+    <div class="card-top">
+      <span class="card-icon">💳</span>
+      <span class="card-label">Saldo atual</span>
+    </div>
+
+    <strong>R$ 8.450,00</strong>
+    <small class="positive">+8,4% este mês</small>
+  </article>
+
+  <article class="summary-card">
+    <div class="card-top">
+      <span class="card-icon">↗</span>
+      <span class="card-label">Receitas</span>
+    </div>
+
+    <strong>R$ 12.300,00</strong>
+    <small class="positive">+12,5% este mês</small>
+  </article>
+
+  <article class="summary-card">
+    <div class="card-top">
+      <span class="card-icon">↘</span>
+      <span class="card-label">Despesas</span>
+    </div>
+
+    <strong>R$ 3.850,00</strong>
+    <small class="negative">+3,2% este mês</small>
+  </article>
+
+  <article class="summary-card">
+    <div class="card-top">
+      <span class="card-icon">◎</span>
+      <span class="card-label">Economia do mês</span>
+    </div>
+
+    <strong>R$ 2.100,00</strong>
+    <small class="positive">Meta mensal: R$ 2.500</small>
+  </article>
+
+</div>
+
+<div class="dashboard-content">
+
+  <section class="financial-chart">
+
+    <div class="section-header">
+      <div>
+        <h2>Evolução financeira</h2>
+        <p>Receitas e despesas dos últimos meses</p>
+      </div>
+
+      <select>
+        <option>Últimos 6 meses</option>
+        <option>Este ano</option>
+      </select>
+    </div>
+
+    <div class="chart-placeholder">
+
+      <div class="chart-legend">
+        <span>
+          <i class="income-dot"></i>
+          Receitas
+        </span>
+
+        <span>
+          <i class="expense-dot"></i>
+          Despesas
+        </span>
+      </div>
+
+      <div class="fake-chart">
+        <div class="chart-line"></div>
+
+        <div class="months">
+          <span>Mar</span>
+          <span>Abr</span>
+          <span>Mai</span>
+          <span>Jun</span>
+          <span>Jul</span>
+          <span>Ago</span>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <section class="recent-transactions">
+
+    <div class="section-header">
+      <div>
+        <h2>Transações recentes</h2>
+        <p>Últimas movimentações</p>
+      </div>
+
+      <button class="see-all">
+        Ver todas
+      </button>
+    </div>
+
+    <div class="transaction-list">
+
+      <div class="transaction">
+        <div class="transaction-icon">🛒</div>
+
+        <div class="transaction-info">
+          <strong>Supermercado</strong>
+          <span>Hoje</span>
+        </div>
+
+        <span class="transaction-value expense">
+          - R$ 320,00
+        </span>
+      </div>
+
+      <div class="transaction">
+        <div class="transaction-icon">💼</div>
+
+        <div class="transaction-info">
+          <strong>Salário</strong>
+          <span>05 Ago</span>
+        </div>
+
+        <span class="transaction-value income">
+          + R$ 6.500,00
+        </span>
+      </div>
+
+      <div class="transaction">
+        <div class="transaction-icon">🏠</div>
+
+        <div class="transaction-info">
+          <strong>Aluguel</strong>
+          <span>03 Ago</span>
+        </div>
+
+        <span class="transaction-value expense">
+          - R$ 1.850,00
+        </span>
+      </div>
+
+      <div class="transaction">
+        <div class="transaction-icon">💻</div>
+
+        <div class="transaction-info">
+          <strong>Freelance</strong>
+          <span>01 Ago</span>
+        </div>
+
+        <span class="transaction-value income">
+          + R$ 1.200,00
+        </span>
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+
+<div class="dashboard-bottom">
+
+  <!-- DESPESAS POR CATEGORIA -->
+  <section class="categories-card">
+
+    <div class="section-header">
+      <div>
+        <h2>Despesas por categoria</h2>
+        <p>Distribuição dos gastos deste mês</p>
+      </div>
+
+      <button class="see-all">Ver detalhes</button>
+    </div>
+
+    <div class="category-list">
+
+      <div class="category-item">
+        <div class="category-info">
+          <span class="category-icon">🏠</span>
+
+          <div>
+            <strong>Moradia</strong>
+            <span>R$ 1.850,00</span>
+          </div>
+        </div>
+
+        <div class="category-percentage">
+          <strong>48%</strong>
+        </div>
+
+        <div class="progress">
+          <div class="progress-fill housing"></div>
+        </div>
+      </div>
+
+
+      <div class="category-item">
+        <div class="category-info">
+          <span class="category-icon">🛒</span>
+
+          <div>
+            <strong>Alimentação</strong>
+            <span>R$ 780,00</span>
+          </div>
+        </div>
+
+        <div class="category-percentage">
+          <strong>20%</strong>
+        </div>
+
+        <div class="progress">
+          <div class="progress-fill food"></div>
+        </div>
+      </div>
+
+
+      <div class="category-item">
+        <div class="category-info">
+          <span class="category-icon">🚗</span>
+
+          <div>
+            <strong>Transporte</strong>
+            <span>R$ 520,00</span>
+          </div>
+        </div>
+
+        <div class="category-percentage">
+          <strong>14%</strong>
+        </div>
+
+        <div class="progress">
+          <div class="progress-fill transport"></div>
+        </div>
+      </div>
+
+
+      <div class="category-item">
+        <div class="category-info">
+          <span class="category-icon">🎬</span>
+
+          <div>
+            <strong>Lazer</strong>
+            <span>R$ 350,00</span>
+          </div>
+        </div>
+
+        <div class="category-percentage">
+          <strong>9%</strong>
+        </div>
+
+        <div class="progress">
+          <div class="progress-fill leisure"></div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- METAS -->
+  <section class="goals-card">
+
+    <div class="section-header">
+      <div>
+        <h2>Metas financeiras</h2>
+        <p>Acompanhe seus objetivos</p>
+      </div>
+
+      <button class="see-all">Ver todas</button>
+    </div>
+
+
+    <div class="goal">
+
+      <div class="goal-header">
+        <div>
+          <span class="goal-icon">✈️</span>
+
+          <div>
+            <strong>Viagem</strong>
+            <span>R$ 6.500 de R$ 10.000</span>
+          </div>
+        </div>
+
+        <strong class="goal-percentage">65%</strong>
+      </div>
+
+      <div class="goal-progress">
+        <div class="goal-progress-fill travel"></div>
+      </div>
+
+    </div>
+
+
+    <div class="goal">
+
+      <div class="goal-header">
+        <div>
+          <span class="goal-icon">🛟</span>
+
+          <div>
+            <strong>Reserva de emergência</strong>
+            <span>R$ 12.000 de R$ 20.000</span>
+          </div>
+        </div>
+
+        <strong class="goal-percentage">60%</strong>
+      </div>
+
+      <div class="goal-progress">
+        <div class="goal-progress-fill emergency"></div>
+      </div>
+
+    </div>
+
+
+    <div class="goal">
+
+      <div class="goal-header">
+        <div>
+          <span class="goal-icon">💻</span>
+
+          <div>
+            <strong>Novo notebook</strong>
+            <span>R$ 3.200 de R$ 5.000</span>
+          </div>
+        </div>
+
+        <strong class="goal-percentage">64%</strong>
+      </div>
+
+      <div class="goal-progress">
+        <div class="goal-progress-fill notebook"></div>
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
