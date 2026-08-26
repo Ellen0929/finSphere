@@ -1,0 +1,89 @@
+.sidebar {
+  width: 250px;
+  min-height: 100%;
+  align-self: stretch;
+  background: linear-gradient(180deg, #17142b 0%, #211a3d 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 18px;
+  box-sizing: border-box;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 48px;
+
+  h1 {
+    margin: 0;
+    font-size: 21px;
+  }
+
+  span {
+    font-size: 12px;
+    color: #aaa3c7;
+  }
+}
+
+.brand-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 20px;
+  background: linear-gradient(135deg, #9b6cff, #ff71b8);
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  border-radius: 12px;
+  color: #c9c4dc;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: white;
+  }
+
+  &.active {
+    background: linear-gradient(
+      90deg,
+      rgba(155, 108, 255, 0.24),
+      rgba(255, 113, 184, 0.12)
+    );
+
+    color: #fff;
+  }
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  color: #aaa3c7;
+
+  span {
+    font-weight: 600;
+  }
+
+  small {
+    margin-top: 4px;
+    font-size: 10px;
+  }
+}

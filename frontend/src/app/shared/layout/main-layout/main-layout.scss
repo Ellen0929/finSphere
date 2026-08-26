@@ -1,0 +1,15 @@
+.layout {
+  display: flex;
+  min-height: 100%;
+  align-items: stretch;
+  background: #f7f6fb;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.page {
+  padding: 32px;
+}
