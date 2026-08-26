@@ -1,0 +1,110 @@
+<div class="modal-backdrop">
+
+    <div class="modal">
+
+        <div class="modal-header">
+            <div>
+                <span class="eyebrow">NOVA MOVIMENTAÇÃO</span>
+                <h2>Nova transação</h2>
+                <p>Adicione uma receita ou despesa.</p>
+            </div>
+
+            <button class="close-button" type="button" (click)="closeModal()">
+                ×
+            </button>
+        </div>
+
+        <form class="transaction-form" (ngSubmit)="saveTransaction()">
+
+            <div class="type-selector">
+
+                <button type="button" class="type-button income" [class.active]="transactionType === 'income'"
+                    (click)="selectType('income')">
+                    Receita
+                </button>
+
+                <button type="button" class="type-button expense" [class.active]="transactionType === 'expense'"
+                    (click)="selectType('expense')">
+                    Despesa
+                </button>
+
+            </div>
+
+            <div class="form-group">
+                <label for="description">Descrição</label>
+
+                <input id="description" type="text" placeholder="Ex: Supermercado" [(ngModel)]="description"
+                    name="description" />
+
+                @if (submitted && !description) {
+                <span class="error-message">
+                    Informe uma descrição.
+                </span>
+                }
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label for="amount">Valor</label>
+
+                    <input id="amount" type="number" placeholder="R$ 0,00" [(ngModel)]="amount" name="amount" />
+
+                    @if (submitted && !amount) {
+                    <span class="error-message">
+                        Informe um valor.
+                    </span>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Data</label>
+
+                    <input id="date" type="date" [(ngModel)]="date" name="date" />
+
+                    @if (submitted && !date) {
+                    <span class="error-message">
+                        Informe uma data.
+                    </span>
+                    }
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="category">Categoria</label>
+
+                <select id="category" [(ngModel)]="category" name="category">
+                    <option value="">Selecione uma categoria</option>
+                    <option>Alimentação</option>
+                    <option>Moradia</option>
+                    <option>Transporte</option>
+                    <option>Lazer</option>
+                    <option>Salário</option>
+                    <option>Trabalho</option>
+                </select>
+
+                @if (submitted && !category) {
+                <span class="error-message">
+                    Selecione uma categoria.
+                </span>
+                }
+            </div>
+
+            <div class="modal-actions">
+
+                <button type="button" class="cancel-button" (click)="closeModal()">
+                    Cancelar
+                </button>
+
+                <button type="submit" class="save-button">
+                    Salvar transação
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
