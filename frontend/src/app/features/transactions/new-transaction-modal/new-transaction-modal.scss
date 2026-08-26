@@ -1,0 +1,157 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(23, 20, 43, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+.modal {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 24px 70px rgba(34, 26, 61, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 26px;
+
+  h2 {
+    margin: 6px 0;
+    color: #242038;
+    font-size: 24px;
+  }
+
+  p {
+    margin: 0;
+    color: #918b9f;
+    font-size: 13px;
+  }
+}
+
+.eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #9b6cff;
+}
+
+.close-button {
+  border: none;
+  background: #f4f0ff;
+  color: #6c6285;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.transaction-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.type-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.type-button {
+  border: 1px solid #e8e4ef;
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 11px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #817a91;
+
+  &.active {
+    color: #ffffff;
+    border-color: transparent;
+  }
+
+  &.income.active {
+    background: linear-gradient(135deg, #7b61ff, #a66cff);
+  }
+
+  &.expense.active {
+    background: linear-gradient(135deg, #e5648c, #ff71b8);
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #5e586d;
+  }
+
+  input,
+  select {
+    height: 44px;
+    border: 1px solid #e5e1ec;
+    border-radius: 11px;
+    padding: 0 12px;
+    outline: none;
+    color: #514b60;
+    background: #ffffff;
+
+    &:focus {
+      border-color: #a374f3;
+      box-shadow: 0 0 0 3px rgba(163, 116, 243, 0.1);
+    }
+  }
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.cancel-button,
+.save-button {
+  border: none;
+  border-radius: 11px;
+  padding: 12px 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancel-button {
+  background: #f3f1f6;
+  color: #6f697c;
+}
+
+.save-button {
+  background: linear-gradient(135deg, #9b6cff, #ff71b8);
+  color: #ffffff;
+}
+
+.error-message {
+  color: #e25572;
+  font-size: 11px;
+  margin-top: 2px;
+}

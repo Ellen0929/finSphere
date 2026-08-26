@@ -7,16 +7,13 @@
       <p>Gerencie suas receitas e despesas.</p>
     </div>
 
-    <button class="new-transaction">
+    <button class="new-transaction" (click)="openModal()">
       + Nova transação
     </button>
   </div>
 
   <div class="filters">
-    <input
-      type="text"
-      placeholder="Buscar transação..."
-    />
+    <input type="text" placeholder="Buscar transação..." />
 
     <select>
       <option>Todos os tipos</option>
@@ -45,78 +42,52 @@
       <span>Valor</span>
     </div>
 
-    <div class="transaction-row">
-      <div class="description">
-        <span class="icon">🛒</span>
-        <strong>Supermercado</strong>
-      </div>
+    @for (transaction of transactions; track $index) {
 
-      <span>Alimentação</span>
-      <span>26 Ago 2026</span>
+  <div class="transaction-row">
 
-      <span class="type expense">
-        Despesa
+    <div class="description">
+      <span class="icon">
+        {{ transaction.type === 'income' ? '💼' : '💳' }}
       </span>
 
-      <strong class="value negative">
-        - R$ 320,00
+      <strong>
+        {{ transaction.description }}
       </strong>
     </div>
 
-    <div class="transaction-row">
-      <div class="description">
-        <span class="icon">💼</span>
-        <strong>Salário</strong>
-      </div>
+    <span>{{ transaction.category }}</span>
 
-      <span>Receita</span>
-      <span>05 Ago 2026</span>
+    <span>{{ transaction.date }}</span>
 
-      <span class="type income">
-        Receita
-      </span>
+    <span
+      class="type"
+      [class.income]="transaction.type === 'income'"
+      [class.expense]="transaction.type === 'expense'"
+    >
+      {{ transaction.type === 'income' ? 'Receita' : 'Despesa' }}
+    </span>
 
-      <strong class="value positive">
-        + R$ 6.500,00
-      </strong>
-    </div>
+    <strong
+      class="value"
+      [class.positive]="transaction.type === 'income'"
+      [class.negative]="transaction.type === 'expense'"
+    >
+      {{ transaction.type === 'income' ? '+' : '-' }}
+      R$ {{ transaction.amount.toFixed(2).replace('.', ',') }}
+    </strong>
 
-    <div class="transaction-row">
-      <div class="description">
-        <span class="icon">🏠</span>
-        <strong>Aluguel</strong>
-      </div>
+  </div>
 
-      <span>Moradia</span>
-      <span>03 Ago 2026</span>
-
-      <span class="type expense">
-        Despesa
-      </span>
-
-      <strong class="value negative">
-        - R$ 1.850,00
-      </strong>
-    </div>
-
-    <div class="transaction-row">
-      <div class="description">
-        <span class="icon">💻</span>
-        <strong>Freelance</strong>
-      </div>
-
-      <span>Trabalho</span>
-      <span>01 Ago 2026</span>
-
-      <span class="type income">
-        Receita
-      </span>
-
-      <strong class="value positive">
-        + R$ 1.200,00
-      </strong>
-    </div>
+}
 
   </div>
 
 </section>
+
+@if (isModalOpen) {
+  <app-new-transaction-modal
+    (close)="closeModal()"
+    (save)="addTransaction($event)">
+  </app-new-transaction-modal>
+}
