@@ -155,3 +155,35 @@
     min-width: 850px;
   }
 }
+
+.empty-state {
+  padding: 50px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  span {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: #f4f0ff;
+    color: #9b6cff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 14px;
+  }
+
+  strong {
+    color: #302b43;
+    font-size: 15px;
+  }
+
+  p {
+    margin: 6px 0 0;
+    color: #9690a4;
+    font-size: 12px;
+  }
+}
