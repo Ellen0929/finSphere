@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NewTransactionModal } from '../new-transaction-modal/new-transaction-modal';
+import {
+  TransactionService,
+  TransactionResponse
+} from '../../../core/services/transaction.service';
 
 @Component({
   selector: 'app-transactions',
@@ -8,7 +12,7 @@ import { NewTransactionModal } from '../new-transaction-modal/new-transaction-mo
   templateUrl: './transactions.html',
   styleUrl: './transactions.scss'
 })
-export class Transactions {
+export class Transactions implements OnInit {
 
   isModalOpen = false;
 
@@ -18,49 +22,51 @@ export class Transactions {
   selectedCategory = '';
   selectedMonth = '';
 
-  // Transações
-  transactions = [
-    {
-      description: 'Supermercado',
-      category: 'Alimentação',
-      date: '26 Ago 2026',
-      type: 'expense',
-      amount: 320
-    },
-    {
-      description: 'Salário',
-      category: 'Receita',
-      date: '05 Ago 2026',
-      type: 'income',
-      amount: 6500
-    },
-    {
-      description: 'Aluguel',
-      category: 'Moradia',
-      date: '03 Ago 2026',
-      type: 'expense',
-      amount: 1850
-    },
-    {
-      description: 'Freelance',
-      category: 'Trabalho',
-      date: '01 Ago 2026',
-      type: 'income',
-      amount: 1200
-    }
-  ];
+  // Usuário temporário para integração
+  userId = 1;
 
-  // Abre o modal
+  // Agora a lista vem da API
+  transactions: TransactionResponse[] = [];
+
+  constructor(
+    private transactionService: TransactionService
+  ) { }
+
+  ngOnInit() {
+    this.loadTransactions();
+  }
+
+  loadTransactions() {
+    this.transactionService
+      .findByUser(this.userId)
+      .subscribe({
+        next: (transactions) => {
+          this.transactions = transactions;
+        },
+        error: (error) => {
+          console.error(
+            'Erro ao carregar transações:',
+            error
+          );
+        }
+      });
+  }
+
   openModal() {
     this.isModalOpen = true;
   }
 
-  // Fecha o modal
   closeModal() {
     this.isModalOpen = false;
   }
 
-  // Filtra as transações
+  clearFilters() {
+    this.searchTerm = '';
+    this.selectedType = '';
+    this.selectedCategory = '';
+    this.selectedMonth = '';
+  }
+
   get filteredTransactions() {
     return this.transactions.filter(transaction => {
 
@@ -71,11 +77,11 @@ export class Transactions {
 
       const matchesType =
         !this.selectedType ||
-        transaction.type === this.selectedType;
+        transaction.type.toLowerCase() === this.selectedType;
 
       const matchesCategory =
         !this.selectedCategory ||
-        transaction.category === this.selectedCategory;
+        transaction.categoryName === this.selectedCategory;
 
       const matchesMonth =
         !this.selectedMonth ||
@@ -90,59 +96,54 @@ export class Transactions {
     });
   }
 
-  // Verifica se a transação pertence ao mês selecionado
   private matchesSelectedMonth(date: string): boolean {
 
-    const months: Record<string, string> = {
-      Jan: '01',
-      Fev: '02',
-      Mar: '03',
-      Abr: '04',
-      Mai: '05',
-      Jun: '06',
-      Jul: '07',
-      Ago: '08',
-      Set: '09',
-      Out: '10',
-      Nov: '11',
-      Dez: '12'
-    };
-
-    const parts = date.split(' ');
-
-    if (parts.length !== 3) {
-      return false;
-    }
-
-    const month = months[parts[1]];
-    const year = parts[2];
+    const [year, month] = date.split('-');
 
     return `${year}-${month}` === this.selectedMonth;
   }
 
-  // Adiciona uma nova transação
   addTransaction(transaction: any) {
 
-    const formattedTransaction = {
-      ...transaction,
-      date: this.formatDate(transaction.date)
+    const categoryIds: Record<string, number> = {
+      'Moradia': 1,
+      'Alimentação': 2,
+      'Transporte': 3,
+      'Lazer': 4,
+      'Receita': 5,
+      'Trabalho': 6
     };
 
-    this.transactions.unshift(formattedTransaction);
-  }
+    const request = {
+      description: transaction.description,
+      amount: transaction.amount,
 
-  // Formata a data para ex: 27 Ago 2026
-  private formatDate(date: string): string {
+      type:
+        transaction.type === 'income'
+          ? 'INCOME' as const
+          : 'EXPENSE' as const,
 
-    const [year, month, day] = date.split('-');
+      date: transaction.date,
 
-    const months = [
-      'Jan', 'Fev', 'Mar', 'Abr',
-      'Mai', 'Jun', 'Jul', 'Ago',
-      'Set', 'Out', 'Nov', 'Dez'
-    ];
+      categoryId: categoryIds[transaction.category],
 
-    return `${day} ${months[Number(month) - 1]} ${year}`;
+      userId: this.userId
+    };
+
+    this.transactionService
+      .create(request)
+      .subscribe({
+        next: () => {
+          this.loadTransactions();
+        },
+
+        error: (error) => {
+          console.error(
+            'Erro ao cadastrar transação:',
+            error
+          );
+        }
+      });
   }
 
 }
