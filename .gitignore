@@ -25,3 +25,6 @@ replay_pid*
 
 # Projeto Cypress local
 cypress/
+
+# Maven
+backend/target/

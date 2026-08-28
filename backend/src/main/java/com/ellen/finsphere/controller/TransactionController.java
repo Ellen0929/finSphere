@@ -1,6 +1,7 @@
 package com.ellen.finsphere.controller;
 
-import com.ellen.finsphere.model.Transaction;
+import com.ellen.finsphere.dto.TransactionRequestDTO;
+import com.ellen.finsphere.dto.TransactionResponseDTO;
 import com.ellen.finsphere.service.TransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionController {
@@ -20,10 +22,10 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<Transaction> create(
-            @RequestBody Transaction transaction) {
+    public ResponseEntity<TransactionResponseDTO> create(
+            @RequestBody TransactionRequestDTO transaction) {
 
-        Transaction createdTransaction =
+        TransactionResponseDTO createdTransaction =
                 transactionService.create(transaction);
 
         return ResponseEntity
@@ -32,7 +34,7 @@ public class TransactionController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Transaction>> findByUser(
+    public ResponseEntity<List<TransactionResponseDTO>> findByUser(
             @PathVariable Long userId) {
 
         return ResponseEntity.ok(
