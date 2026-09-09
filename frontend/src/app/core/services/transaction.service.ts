@@ -29,7 +29,7 @@ export class TransactionService {
 
   private readonly apiUrl = 'http://localhost:8080/api/transactions';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   findByUser(userId: number): Observable<TransactionResponse[]> {
     return this.http.get<TransactionResponse[]>(
@@ -41,6 +41,24 @@ export class TransactionService {
     return this.http.post<TransactionResponse>(
       this.apiUrl,
       transaction
+    );
+  }
+
+  getIncome(userId: number): Observable<number> {
+    return this.http.get<number>(
+      `${this.apiUrl}/user/${userId}/income`
+    );
+  }
+
+  getExpenses(userId: number): Observable<number> {
+    return this.http.get<number>(
+      `${this.apiUrl}/user/${userId}/expenses`
+    );
+  }
+
+  getBalance(userId: number): Observable<number> {
+    return this.http.get<number>(
+      `${this.apiUrl}/user/${userId}/balance`
     );
   }
 }

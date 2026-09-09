@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NewTransactionModal } from '../new-transaction-modal/new-transaction-modal';
 import {
@@ -29,11 +30,19 @@ export class Transactions implements OnInit {
   transactions: TransactionResponse[] = [];
 
   constructor(
-    private transactionService: TransactionService
+    private transactionService: TransactionService,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit() {
     this.loadTransactions();
+
+    this.route.queryParamMap.subscribe(params => {
+      if (params.get('new') === 'true') {
+        this.openModal();
+      }
+    });
   }
 
   loadTransactions() {
@@ -58,6 +67,14 @@ export class Transactions implements OnInit {
 
   closeModal() {
     this.isModalOpen = false;
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        new: null
+      },
+      queryParamsHandling: 'merge'
+    });
   }
 
   clearFilters() {

@@ -100,11 +100,9 @@
 }
 
 .balance {
-  background: linear-gradient(
-    135deg,
-    #211a3d 0%,
-    #34235c 100%
-  );
+  background: linear-gradient(135deg,
+      #211a3d 0%,
+      #34235c 100%);
 
   strong {
     color: #ffffff;
@@ -222,21 +220,36 @@
   }
 }
 
-.chart-line {
+.chart-bars {
   position: absolute;
-  left: 5%;
-  right: 5%;
-  top: 85px;
-  height: 3px;
-  border-radius: 10px;
-  background: linear-gradient(
-    90deg,
-    #9b6cff,
-    #c56be7,
-    #ff71b8,
-    #9b6cff
-  );
-  transform: skewY(-5deg);
+  inset: 0 0 0 0;
+  display: flex;
+  align-items: end;
+  gap: 18px;
+  padding: 10px 8px 0;
+}
+
+.month-bars {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+}
+
+.bar {
+  width: 14px;
+  border-radius: 8px 8px 0 0;
+  transition: height 0.3s ease;
+}
+
+.income-bar {
+  background: #9b6cff;
+}
+
+.expense-bar {
+  background: #ff71b8;
 }
 
 .months {
@@ -244,10 +257,17 @@
   bottom: -27px;
   left: 0;
   right: 0;
+
   display: flex;
-  justify-content: space-between;
+
   color: #aaa5b6;
   font-size: 11px;
+  text-align: center;
+
+  span {
+    flex: 1;
+    text-align: center;
+  }
 }
 
 .see-all {
@@ -354,7 +374,7 @@
   align-items: center;
   gap: 12px;
 
-  > div {
+  >div {
     display: flex;
     flex-direction: column;
   }
@@ -408,23 +428,6 @@
   background: linear-gradient(90deg, #9b6cff, #ff71b8);
 }
 
-.housing {
-  width: 48%;
-}
-
-.food {
-  width: 20%;
-}
-
-.transport {
-  width: 14%;
-}
-
-.leisure {
-  width: 9%;
-}
-
-
 /* METAS */
 
 .goal {
@@ -442,7 +445,7 @@
   justify-content: space-between;
   align-items: center;
 
-  > div {
+  >div {
     display: flex;
     align-items: center;
     gap: 12px;
