@@ -7,7 +7,7 @@
       <p>Acompanhe suas receitas, despesas e evolução financeira.</p>
     </div>
 
-    <button class="new-transaction">
+    <button class="new-transaction" routerLink="/transactions" [queryParams]="{ new: 'true' }">
       + Nova transação
     </button>
   </div>
@@ -22,8 +22,8 @@
       <span class="card-label">Saldo atual</span>
     </div>
 
-    <strong>R$ 8.450,00</strong>
-    <small class="positive">+8,4% este mês</small>
+    <strong>{{ balance() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+    <small class="positive">Atualizado com suas transações</small>
   </article>
 
   <article class="summary-card">
@@ -32,8 +32,8 @@
       <span class="card-label">Receitas</span>
     </div>
 
-    <strong>R$ 12.300,00</strong>
-    <small class="positive">+12,5% este mês</small>
+    <strong>{{ income() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+    <small class="positive">Total de receitas cadastradas</small>
   </article>
 
   <article class="summary-card">
@@ -42,18 +42,26 @@
       <span class="card-label">Despesas</span>
     </div>
 
-    <strong>R$ 3.850,00</strong>
-    <small class="negative">+3,2% este mês</small>
+    <strong>{{ expenses() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+    <small class="negative">Total de despesas cadastradas</small>
   </article>
 
   <article class="summary-card">
     <div class="card-top">
       <span class="card-icon">◎</span>
-      <span class="card-label">Economia do mês</span>
+      <span class="card-label">Resultado do mês</span>
     </div>
 
-    <strong>R$ 2.100,00</strong>
-    <small class="positive">Meta mensal: R$ 2.500</small>
+    <strong>
+      {{ monthlyResult() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+    </strong>
+
+    <small [class.positive]="monthlyResult() >= 0" [class.negative]="monthlyResult() < 0">
+      {{ monthlyResult() >= 0
+      ? 'Resultado positivo no mês'
+      : 'Resultado negativo no mês'
+      }}
+    </small>
   </article>
 
 </div>
@@ -65,12 +73,17 @@
     <div class="section-header">
       <div>
         <h2>Evolução financeira</h2>
-        <p>Receitas e despesas dos últimos meses</p>
+        <p>
+          {{ selectedPeriod() === 'year'
+          ? 'Receitas e despesas deste ano'
+          : 'Receitas e despesas dos últimos 6 meses'
+          }}
+        </p>
       </div>
 
-      <select>
-        <option>Últimos 6 meses</option>
-        <option>Este ano</option>
+      <select aria-label="Período da evolução financeira" [value]="selectedPeriod()" (change)="onPeriodChange($event)">
+        <option value="6months">Últimos 6 meses</option>
+        <option value="year">Este ano</option>
       </select>
     </div>
 
@@ -89,15 +102,31 @@
       </div>
 
       <div class="fake-chart">
-        <div class="chart-line"></div>
+
+        <div class="chart-bars">
+
+          @for (month of monthlySummary(); track month.label) {
+
+          <div class="month-bars">
+
+            <div class="bar income-bar" [style.height.%]="(month.income / maxMonthlyValue()) * 100"
+              [title]="'Receitas: R$ ' + month.income">
+            </div>
+
+            <div class="bar expense-bar" [style.height.%]="(month.expenses / maxMonthlyValue()) * 100"
+              [title]="'Despesas: R$ ' + month.expenses">
+            </div>
+
+          </div>
+
+          }
+
+        </div>
 
         <div class="months">
-          <span>Mar</span>
-          <span>Abr</span>
-          <span>Mai</span>
-          <span>Jun</span>
-          <span>Jul</span>
-          <span>Ago</span>
+          @for (month of monthlySummary(); track month.label) {
+          <span>{{ month.label }}</span>
+          }
         </div>
       </div>
 
@@ -114,66 +143,33 @@
         <p>Últimas movimentações</p>
       </div>
 
-      <button class="see-all">
+      <button class="see-all" routerLink="/transactions">
         Ver todas
       </button>
     </div>
 
-    <div class="transaction-list">
+    @for (transaction of recentTransactions(); track transaction.id) {
 
-      <div class="transaction">
-        <div class="transaction-icon">🛒</div>
+    <div class="transaction">
 
-        <div class="transaction-info">
-          <strong>Supermercado</strong>
-          <span>Hoje</span>
-        </div>
-
-        <span class="transaction-value expense">
-          - R$ 320,00
-        </span>
+      <div class="transaction-icon">
+        {{ transaction.type === 'INCOME' ? '💼' : '💸' }}
       </div>
 
-      <div class="transaction">
-        <div class="transaction-icon">💼</div>
-
-        <div class="transaction-info">
-          <strong>Salário</strong>
-          <span>05 Ago</span>
-        </div>
-
-        <span class="transaction-value income">
-          + R$ 6.500,00
-        </span>
+      <div class="transaction-info">
+        <strong>{{ transaction.description }}</strong>
+        <span>{{ transaction.date | date:'dd/MM/yyyy' }}</span>
       </div>
 
-      <div class="transaction">
-        <div class="transaction-icon">🏠</div>
-
-        <div class="transaction-info">
-          <strong>Aluguel</strong>
-          <span>03 Ago</span>
-        </div>
-
-        <span class="transaction-value expense">
-          - R$ 1.850,00
-        </span>
-      </div>
-
-      <div class="transaction">
-        <div class="transaction-icon">💻</div>
-
-        <div class="transaction-info">
-          <strong>Freelance</strong>
-          <span>01 Ago</span>
-        </div>
-
-        <span class="transaction-value income">
-          + R$ 1.200,00
-        </span>
-      </div>
+      <span class="transaction-value" [class.income]="transaction.type === 'INCOME'"
+        [class.expense]="transaction.type === 'EXPENSE'">
+        {{ transaction.type === 'INCOME' ? '+' : '-' }}
+        {{ transaction.amount | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+      </span>
 
     </div>
+
+    }
 
   </section>
 
@@ -195,165 +191,34 @@
 
     <div class="category-list">
 
+      @for (category of categoryExpenses(); track category.name) {
+
       <div class="category-item">
+
         <div class="category-info">
-          <span class="category-icon">🏠</span>
+          <span class="category-icon">💰</span>
 
           <div>
-            <strong>Moradia</strong>
-            <span>R$ 1.850,00</span>
+            <strong>{{ category.name }}</strong>
+
+            <span>
+              {{ category.amount | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+            </span>
           </div>
         </div>
 
         <div class="category-percentage">
-          <strong>48%</strong>
+          <strong>{{ category.percentage }}%</strong>
         </div>
 
         <div class="progress">
-          <div class="progress-fill housing"></div>
-        </div>
-      </div>
-
-
-      <div class="category-item">
-        <div class="category-info">
-          <span class="category-icon">🛒</span>
-
-          <div>
-            <strong>Alimentação</strong>
-            <span>R$ 780,00</span>
+          <div class="progress-fill" [style.width.%]="category.percentage">
           </div>
         </div>
 
-        <div class="category-percentage">
-          <strong>20%</strong>
-        </div>
-
-        <div class="progress">
-          <div class="progress-fill food"></div>
-        </div>
       </div>
 
-
-      <div class="category-item">
-        <div class="category-info">
-          <span class="category-icon">🚗</span>
-
-          <div>
-            <strong>Transporte</strong>
-            <span>R$ 520,00</span>
-          </div>
-        </div>
-
-        <div class="category-percentage">
-          <strong>14%</strong>
-        </div>
-
-        <div class="progress">
-          <div class="progress-fill transport"></div>
-        </div>
-      </div>
-
-
-      <div class="category-item">
-        <div class="category-info">
-          <span class="category-icon">🎬</span>
-
-          <div>
-            <strong>Lazer</strong>
-            <span>R$ 350,00</span>
-          </div>
-        </div>
-
-        <div class="category-percentage">
-          <strong>9%</strong>
-        </div>
-
-        <div class="progress">
-          <div class="progress-fill leisure"></div>
-        </div>
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- METAS -->
-  <section class="goals-card">
-
-    <div class="section-header">
-      <div>
-        <h2>Metas financeiras</h2>
-        <p>Acompanhe seus objetivos</p>
-      </div>
-
-      <button class="see-all">Ver todas</button>
-    </div>
-
-
-    <div class="goal">
-
-      <div class="goal-header">
-        <div>
-          <span class="goal-icon">✈️</span>
-
-          <div>
-            <strong>Viagem</strong>
-            <span>R$ 6.500 de R$ 10.000</span>
-          </div>
-        </div>
-
-        <strong class="goal-percentage">65%</strong>
-      </div>
-
-      <div class="goal-progress">
-        <div class="goal-progress-fill travel"></div>
-      </div>
-
-    </div>
-
-
-    <div class="goal">
-
-      <div class="goal-header">
-        <div>
-          <span class="goal-icon">🛟</span>
-
-          <div>
-            <strong>Reserva de emergência</strong>
-            <span>R$ 12.000 de R$ 20.000</span>
-          </div>
-        </div>
-
-        <strong class="goal-percentage">60%</strong>
-      </div>
-
-      <div class="goal-progress">
-        <div class="goal-progress-fill emergency"></div>
-      </div>
-
-    </div>
-
-
-    <div class="goal">
-
-      <div class="goal-header">
-        <div>
-          <span class="goal-icon">💻</span>
-
-          <div>
-            <strong>Novo notebook</strong>
-            <span>R$ 3.200 de R$ 5.000</span>
-          </div>
-        </div>
-
-        <strong class="goal-percentage">64%</strong>
-      </div>
-
-      <div class="goal-progress">
-        <div class="goal-progress-fill notebook"></div>
-      </div>
+      }
 
     </div>
 
