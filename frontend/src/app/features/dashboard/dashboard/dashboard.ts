@@ -6,6 +6,11 @@ import {
   TransactionService,
   TransactionResponse
 } from '../../../core/services/transaction.service';
+import {
+  FinancialGoalService,
+  FinancialGoalResponse
+} from '../../../core/services/financial-goal.service';
+import { FormsModule } from '@angular/forms';
 
 registerLocaleData(localePt);
 
@@ -22,7 +27,7 @@ interface MonthlySummary {
 }
 
 @Component({
-  imports: [CurrencyPipe, DatePipe, RouterLink],
+  imports: [CurrencyPipe, DatePipe, RouterLink, FormsModule],
   selector: 'app-dashboard',
   styleUrl: './dashboard.scss',
   templateUrl: './dashboard.html',
@@ -49,12 +54,31 @@ export class Dashboard implements OnInit {
 
   allTransactions = signal<TransactionResponse[]>([]);
 
+  financialGoals = signal<FinancialGoalResponse[]>([]);
+
+  isGoalModalOpen = signal(false);
+
+  goalName = '';
+  goalTargetAmount: number | null = null;
+  goalCurrentAmount: number | null = null;
+  goalDeadline = '';
+  goalFormError = '';
+
+  isGoalAmountModalOpen = signal(false);
+
+  selectedGoal = signal<FinancialGoalResponse | null>(null);
+
+  goalAmountToAdd: number | null = null;
+  goalAmountError = '';
+
   constructor(
-    private transactionService: TransactionService
+    private transactionService: TransactionService,
+    private financialGoalService: FinancialGoalService
   ) { }
 
   ngOnInit(): void {
     this.loadSummary();
+    this.loadFinancialGoals();
   }
 
   loadSummary(): void {
@@ -242,6 +266,22 @@ export class Dashboard implements OnInit {
       });
   }
 
+  loadFinancialGoals(): void {
+    this.financialGoalService
+      .findByUser(this.userId)
+      .subscribe({
+        next: (goals) => {
+          this.financialGoals.set(goals);
+        },
+        error: (error) => {
+          console.error(
+            'Erro ao carregar metas financeiras:',
+            error
+          );
+        }
+      });
+  }
+
   onPeriodChange(event: Event): void {
     const select = event.target as HTMLSelectElement;
 
@@ -321,5 +361,172 @@ export class Dashboard implements OnInit {
     );
 
     this.maxMonthlyValue.set(maxValue);
+  }
+
+  calculateGoalPercentage(
+    currentAmount: number,
+    targetAmount: number
+  ): number {
+
+    if (targetAmount <= 0) {
+      return 0;
+    }
+
+    const percentage =
+      (Number(currentAmount) / Number(targetAmount)) * 100;
+
+    return Math.min(
+      Math.round(percentage),
+      100
+    );
+  }
+
+  openGoalModal(): void {
+    this.isGoalModalOpen.set(true);
+  }
+
+  closeGoalModal(): void {
+    this.goalName = '';
+    this.goalTargetAmount = null;
+    this.goalCurrentAmount = null;
+    this.goalDeadline = '';
+    this.goalFormError = '';
+
+    this.isGoalModalOpen.set(false);
+  }
+
+  openGoalAmountModal(goal: FinancialGoalResponse): void {
+    this.selectedGoal.set(goal);
+    this.goalAmountToAdd = null;
+    this.isGoalAmountModalOpen.set(true);
+  }
+
+  closeGoalAmountModal(): void {
+    this.isGoalAmountModalOpen.set(false);
+    this.selectedGoal.set(null);
+    this.goalAmountToAdd = null;
+    this.goalAmountError = '';
+  }
+
+  saveGoalAmount(): void {
+
+    this.goalAmountError = '';
+
+    const goal = this.selectedGoal();
+
+    if (!goal) {
+      return;
+    }
+
+    if (
+      this.goalAmountToAdd === null ||
+      this.goalAmountToAdd <= 0
+    ) {
+      this.goalAmountError =
+        'Informe um valor maior que zero.';
+      return;
+    }
+
+    const newCurrentAmount =
+      Number(goal.currentAmount) +
+      this.goalAmountToAdd;
+
+    this.financialGoalService
+      .updateCurrentAmount(
+        goal.id,
+        newCurrentAmount
+      )
+      .subscribe({
+        next: () => {
+          this.loadFinancialGoals();
+          this.closeGoalAmountModal();
+        },
+        error: (error) => {
+          console.error(
+            'Erro ao atualizar valor da meta:',
+            error
+          );
+        }
+      });
+  }
+
+  saveFinancialGoal(): void {
+
+    this.goalFormError = '';
+
+    if (!this.goalName.trim()) {
+      this.goalFormError = 'Informe o nome da meta.';
+      return;
+    }
+
+    if (
+      this.goalTargetAmount === null ||
+      this.goalTargetAmount <= 0
+    ) {
+      this.goalFormError =
+        'Informe um valor da meta maior que zero.';
+      return;
+    }
+
+    if (
+      this.goalCurrentAmount !== null &&
+      this.goalCurrentAmount < 0
+    ) {
+      this.goalFormError =
+        'O valor inicial não pode ser negativo.';
+      return;
+    }
+
+    const request = {
+      name: this.goalName,
+      targetAmount: this.goalTargetAmount!,
+      currentAmount: this.goalCurrentAmount ?? 0,
+      deadline: this.goalDeadline || null,
+      userId: this.userId
+    };
+
+    this.financialGoalService
+      .create(request)
+      .subscribe({
+        next: () => {
+          this.loadFinancialGoals();
+          this.closeGoalModal();
+
+          this.goalName = '';
+          this.goalTargetAmount = null;
+          this.goalCurrentAmount = null;
+          this.goalDeadline = '';
+        },
+        error: (error) => {
+          console.error(
+            'Erro ao criar meta financeira:',
+            error
+          );
+        }
+      });
+  }
+  deleteFinancialGoal(id: number): void {
+
+    const confirmed = window.confirm(
+      'Tem certeza que deseja excluir esta meta?'
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.financialGoalService
+      .delete(id)
+      .subscribe({
+        next: () => {
+          this.loadFinancialGoals();
+        },
+        error: (error) => {
+          console.error(
+            'Erro ao excluir meta financeira:',
+            error
+          );
+        }
+      });
   }
 }

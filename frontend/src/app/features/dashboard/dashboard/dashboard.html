@@ -224,4 +224,198 @@
 
   </section>
 
+  <section class="goals-card">
+
+    <div class="section-header">
+      <div>
+        <h2>Metas financeiras</h2>
+        <p>Acompanhe seus objetivos</p>
+      </div>
+
+      <button class="see-all" (click)="openGoalModal()">
+        + Nova meta
+      </button>
+
+      @if (isGoalAmountModalOpen() && selectedGoal()) {
+
+      <div class="goal-modal-overlay">
+
+        <div class="goal-modal">
+
+          <div class="goal-modal-header">
+            <div>
+              <h2>Adicionar valor</h2>
+              <p>
+                Meta: {{ selectedGoal()!.name }}
+              </p>
+            </div>
+
+            <button type="button" class="goal-modal-close" (click)="closeGoalAmountModal()">
+              ×
+            </button>
+          </div>
+
+          <div class="goal-form">
+
+            <label>
+              Valor que deseja adicionar
+              <input type="number" min="0.01" step="0.01" placeholder="Ex: 500" [(ngModel)]="goalAmountToAdd">
+            </label>
+
+            @if (goalAmountError) {
+            <p class="goal-form-error">
+              {{ goalAmountError }}
+            </p>
+            }
+
+            <button type="button" class="goal-save-button" (click)="saveGoalAmount()">
+              Adicionar valor
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      }
+    </div>
+
+    @if (financialGoals().length === 0) {
+    <div class="goals-empty-state">
+      <strong>Nenhuma meta criada ainda</strong>
+      <span>
+        Crie sua primeira meta financeira para acompanhar seu progresso.
+      </span>
+    </div>
+    }
+
+    @for (goal of financialGoals(); track goal.id) {
+
+    <div class="goal">
+
+      <div class="goal-header">
+
+        <div>
+          <span class="goal-icon">🎯</span>
+
+          <div>
+            <strong>{{ goal.name }}</strong>
+
+            <span>
+              {{ goal.currentAmount | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+              de
+              {{ goal.targetAmount | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+
+            </span>
+
+            @if (goal.deadline) {
+            <span>
+              Prazo: {{ goal.deadline | date:'dd/MM/yyyy' }}
+            </span>
+            } @else {
+            <span>
+              Sem prazo definido
+            </span>
+            }
+
+          </div>
+        </div>
+
+        <div class="goal-actions">
+
+          <button type="button" class="goal-add-value-button" (click)="openGoalAmountModal(goal)">
+            + Adicionar valor
+          </button>
+
+          <button type="button" class="goal-delete-button" (click)="deleteFinancialGoal(goal.id)">
+            🗑
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="goal-progress-info">
+        <span>Progresso</span>
+
+        <strong class="goal-percentage">
+          {{ calculateGoalPercentage(
+          goal.currentAmount,
+          goal.targetAmount
+          ) }}%
+        </strong>
+      </div>
+
+      <div class="goal-progress">
+        <div class="goal-progress-fill" [style.width.%]="calculateGoalPercentage(
+      goal.currentAmount,
+      goal.targetAmount
+    )">
+        </div>
+      </div>
+
+    </div>
+
+    }
+
+  </section>
+
 </div>
+
+@if (isGoalModalOpen()) {
+
+<div class="goal-modal-overlay">
+
+  <div class="goal-modal">
+
+    <div class="goal-modal-header">
+      <div>
+        <h2>Nova meta financeira</h2>
+        <p>Defina um novo objetivo para suas finanças.</p>
+      </div>
+
+      <button class="goal-modal-close" type="button" (click)="closeGoalModal()">
+        ×
+      </button>
+    </div>
+
+    <div class="goal-form">
+
+      <label>
+        Nome da meta
+        <input type="text" placeholder="Ex: Viagem" [(ngModel)]="goalName">
+      </label>
+
+      <label>
+        Valor da meta
+        <input type="number" min="0.01" step="0.01" placeholder="Ex: 5000" [(ngModel)]="goalTargetAmount">
+      </label>
+
+      <label>
+        Valor inicial
+        <input type="number" min="0" step="0.01" placeholder="Ex: 1000" [(ngModel)]="goalCurrentAmount">
+      </label>
+
+      <label>
+        Prazo
+        <input type="date" [(ngModel)]="goalDeadline">
+      </label>
+
+      @if (goalFormError) {
+      <p class="goal-form-error">
+        {{ goalFormError }}
+      </p>
+      }
+
+      <button type="button" class="goal-save-button" (click)="saveFinancialGoal()">
+        Salvar meta
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+}
